@@ -1,0 +1,9 @@
+# Variáveis de ambiente
+.env
+
+# Volumes Docker
+wordpress_data/
+db_data/
+
+# Other
+.DS_Store
