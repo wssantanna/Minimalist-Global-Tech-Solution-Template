@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+
+# Dependencies (will be installed inside container)
+wp-content/plugins/*/vendor/
+wp-content/plugins/*/composer.lock
+wp-content/plugins/*/.phpunit.cache/
+wp-content/plugins/*/coverage/
+wp-content/plugins/*/.phpstan.cache/

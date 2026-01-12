@@ -1,9 +1,33 @@
-# Variáveis de ambiente
+# Environment
 .env
 
-# Volumes Docker
-wordpress_data/
-db_data/
+# Composer
+/vendor/
+composer.lock
+wp-content/plugins/*/vendor/
+wp-content/plugins/*/composer.lock
 
-# Other
+# PHPUnit
+.phpunit.cache/
+coverage/
+wp-content/plugins/*/.phpunit.cache/
+wp-content/plugins/*/coverage/
+
+# PHPStan
+.phpstan.cache/
+wp-content/plugins/*/.phpstan.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
+
+# WordPress (se necessário no futuro)
+# wp-content/uploads/
+# wp-content/cache/

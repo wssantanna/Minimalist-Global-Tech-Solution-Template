@@ -1,0 +1,61 @@
+/*
+Theme Name: Theme Minimal Global Tech Solution Template
+Theme URI: https://github.com/wssantanna/Minimal-Global-Tech-Solution-Template
+Author: Willian Sant'Anna
+Author URI: https://github.com/wssantanna
+Description: Tema WordPress modular e reutilizável para blogs/magazines
+Version: 2.0.0
+Requires at least: 6.4
+Tested up to: 6.4
+Requires PHP: 8.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: theme-minimal-global-tech-solution-template
+Tags: blog, magazine, responsive, accessibility-ready, hexagonal-architecture
+*/
+
+:root {
+    --theme-primary: #0d6efd;
+    --theme-primary-rgb: 13, 110, 253;
+    --theme-secondary: #6c757d;
+    --theme-secondary-rgb: 108, 117, 125;
+    --theme-accent: #198754;
+    --theme-accent-rgb: 25, 135, 84;
+    --theme-header-bg: #212529;
+    --theme-header-text: #ffffff;
+    --theme-footer-bg: #f8f9fa;
+    --theme-footer-text: #212529;
+    --theme-container-max-width: 1320px;
+    --theme-logo-width: 150px;
+    --theme-logo-height: 50px;
+}
+
+.placeholder__text-white::placeholder {
+    color: white !important;
+    opacity: .5;
+}
+
+@media print {
+
+    .navbar,
+    .site-footer,
+    .comment-form,
+    .post-navigation {
+        display: none;
+    }
+
+    body {
+        font-size: 12pt;
+        color: #000;
+        background: #fff;
+    }
+
+    a {
+        text-decoration: underline;
+        color: #000;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+}

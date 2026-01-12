@@ -1,255 +1,236 @@
-# WordPress Theme Development Environment
+# Theme Globaltech - Monorepo
 
-Ambiente Docker para desenvolvimento do tema theme-globaltech.
+Monorepo containing WordPress theme and plugin with hexagonal architecture.
 
-## Pré-requisitos
-
-- Docker instalado e em execução (https://www.docker.com/products/docker-desktop)
-- Docker Compose
-
-## Estrutura do Projeto
+## 📦 Project Structure
 
 ```
-.
-├── docker-compose.yml
-├── .env
-├── .gitignore
-└── src/                 # Tema WordPress (montado como theme-globaltech)
+custom-theme/                    # Monorepo root
+├── packages/
+│   ├── theme/                   # WordPress Theme (theme-globaltech)
+│   └── plugin/                  # WordPress Plugin (theme-core-features)
+├── docker/                      # Development environment
+├── docs/                        # Centralized documentation
+└── README.md                    # This file
 ```
 
-## Inicialização do Ambiente
+## 🚀 Quick Start
 
-### 1. Iniciar os containers
+### Prerequisites
+
+- Docker Desktop installed and running
+- Git
+
+### 1. Clone the repository
 
 ```bash
+git clone https://github.com/wssantanna/theme-globaltech.git custom-theme
+cd custom-theme
+```
+
+### 2. Start the Docker environment
+
+```bash
+cd docker
 docker-compose up -d
 ```
 
-Este comando irá:
-- Provisionar os containers WordPress, MySQL e PHPMyAdmin
-- Montar o diretório `./src` em `/var/www/html/wp-content/themes/theme-globaltech`
-- Criar volumes persistentes para banco de dados e uploads
+### 3. Access WordPress
 
-### 2. Acessar a aplicação
+- **WordPress**: http://localhost:8080
+- **WordPress Admin**: http://localhost:8080/wp-admin
+- **PHPMyAdmin**: http://localhost:8081
 
-Aguarde aproximadamente 30 segundos para inicialização completa.
+### 4. Complete WordPress installation
 
-**WordPress**: http://localhost:8080
+1. Select language
+2. Create admin credentials
+3. Complete installation
 
-### 3. Instalação inicial
+### 5. Activate theme and plugin
 
-Execute a configuração padrão do WordPress:
+1. Go to **Appearance → Themes** → Activate **"Theme Globaltech"**
+2. Go to **Plugins** → Activate **"Theme Core Features"**
 
-1. Selecione o idioma
-2. Configure credenciais administrativas
-3. Complete a instalação
+## 📚 Documentation
 
-### 4. Ativação do tema
+- [Docker Environment Setup](docs/DOCKER.md) - Complete Docker configuration guide
+- [Theme Documentation](packages/theme/README.md) - Theme-specific documentation
+- [Plugin Architecture](packages/plugin/ARCHITECTURE.md) - Hexagonal architecture details
+- [Plugin Migration Guide](packages/plugin/MIGRATION.md) - Migration from v1.x to v2.0
+- [Plugin Changelog](packages/plugin/CHANGELOG.md) - Version history
 
-No painel administrativo (http://localhost:8080/wp-admin):
+## 🏗️ Architecture
 
-1. Acesse **Aparência → Temas**
-2. Localize **"Theme Globaltech"**
-3. Clique em **Ativar**
+This project uses a **monorepo structure** with two main packages:
 
-## Serviços Disponíveis
+### Theme (`packages/theme/`)
 
-| Serviço | URL | Credenciais |
-|---------|-----|-------------|
-| WordPress | http://localhost:8080 | Definidas na instalação |
-| WordPress Admin | http://localhost:8080/wp-admin | Definidas na instalação |
-| PHPMyAdmin | http://localhost:8081 | root / rootpassword |
+WordPress theme providing the user interface:
 
-## Configuração de Ambiente
+- Templates (index.php, single.php, archive.php, etc.)
+- Template parts (content.php, searchform.php, etc.)
+- Theme-specific helpers and functions
+- Bootstrap integration
+- Responsive design
 
-Edite o arquivo `.env` para personalizar variáveis:
+### Plugin (`packages/plugin/`)
 
-```env
-# Database Configuration
-DB_NAME=wordpress
-DB_USER=wordpress
-DB_PASSWORD=wordpress
-DB_ROOT_PASSWORD=rootpassword
+Core business logic using **hexagonal architecture** (Ports & Adapters):
 
-# WordPress Configuration
-WP_PORT=8080
-WP_DEBUG=true
-
-# PHPMyAdmin Configuration
-PMA_PORT=8081
+```
+plugin/
+├── src/
+│   ├── Domain/          # Business rules (Value Objects, Entities, Enums)
+│   ├── Application/     # Use Cases and DTOs
+│   ├── Infrastructure/  # WordPress adapters (Repository, Service)
+│   └── Presentation/    # Controllers and Hooks
+├── tests/
+│   ├── Unit/            # 91 unit tests
+│   └── Integration/     # Integration tests
+└── theme-core-features.php
 ```
 
-## Comandos Docker
+**Features:**
+- Color customization (Primary, Secondary, Background, Text)
+- Typography settings (Font family selection)
+- Layout options (Grid, List, Masonry with 1-4 columns)
+- Dynamic CSS generation with caching
+- WordPress Customizer integration
 
-### Gerenciamento de Containers
+## 🛠️ Development
+
+### Working with the theme
 
 ```bash
-# Parar containers
+cd packages/theme
+# Edit template files, functions.php, style.css, etc.
+```
+
+### Working with the plugin
+
+```bash
+cd packages/plugin
+
+# Install dependencies
+composer install
+
+# Run tests
+composer test:unit
+
+# Static analysis
+composer analyse
+
+# Fix code style
+composer cs:fix
+```
+
+### Docker commands
+
+```bash
+cd docker
+
+# Start environment
+docker-compose up -d
+
+# Stop environment
 docker-compose stop
 
-# Reiniciar containers
-docker-compose restart
-
-# Parar e remover containers (preserva volumes)
-docker-compose down
-
-# Remover containers e volumes
-docker-compose down -v
-
-# Verificar status
-docker-compose ps
-```
-
-### Logs e Debugging
-
-```bash
-# Logs de todos os serviços
-docker-compose logs -f
-
-# Logs do WordPress
+# View logs
 docker-compose logs -f wordpress
 
-# Logs do MySQL
-docker-compose logs -f db
+# Restart
+docker-compose restart
 
-# Acessar shell do container WordPress
-docker exec -it wordpress_app bash
-```
-
-## Estrutura Mínima do Tema
-
-O diretório `./src` deve conter ao menos:
-
-```
-src/
-├── style.css       # Obrigatório (metadata do tema)
-├── index.php       # Obrigatório (template principal)
-├── functions.php   # Recomendado
-└── screenshot.png  # Opcional (1200x900px)
-```
-
-### Header do style.css configurado
-
-O tema já possui o header correto configurado em [src/style.css](src/style.css):
-
-```css
-/*
-Theme Name: Theme Globaltech
-Theme URI: https://example.com/theme-globaltech
-Author: Seu Nome
-Author URI: https://example.com
-Description: Tema WordPress modular e reutilizável para blogs/magazines
-Version: 1.0.0
-Text Domain: theme-globaltech
-*/
-```
-
-## Workflow de Desenvolvimento
-
-1. Edite arquivos em `./src`
-2. Alterações são refletidas imediatamente no container
-3. Recarregue o navegador para visualizar mudanças
-4. Utilize PHPMyAdmin para operações de banco de dados
-
-## Troubleshooting
-
-### Conflito de portas
-
-Se a porta 8080 estiver em uso, altere `WP_PORT` no arquivo `.env`:
-
-```env
-WP_PORT=8000
-```
-
-Reinicie os containers:
-
-```bash
-docker-compose down
-docker-compose up -d
-```
-
-### Reset completo do ambiente
-
-```bash
+# Remove everything (including database)
 docker-compose down -v
-docker-compose up -d
 ```
 
-**Atenção**: Este comando remove todos os dados persistidos (banco de dados, uploads, configurações).
+## 🧪 Testing
 
-### Verificar logs de erro
+The plugin includes comprehensive testing:
 
 ```bash
-docker-compose logs wordpress | grep -i error
-docker-compose logs db | grep -i error
+cd packages/plugin
+
+# Unit tests (91 tests, 171 assertions)
+composer test:unit
+
+# PHPStan Level 8
+composer analyse
+
+# Code style check
+composer cs:check
+
+# All checks
+composer test
 ```
 
-## Backup e Restore
+## 📋 Requirements
 
-### Exportar banco de dados
+- **PHP**: 8.1+ (enums, readonly properties, modern syntax)
+- **WordPress**: 6.4+
+- **Docker**: Latest version
+- **Composer**: 2.x
 
-Via PHPMyAdmin (http://localhost:8081):
-1. Selecione o database `wordpress`
-2. Navegue até a aba "Export"
-3. Execute a exportação
+## 🎯 Version
 
-Via linha de comando:
+- **Theme**: 2.0.0 (Hexagonal architecture)
+- **Plugin**: 2.0.0 (Hexagonal architecture)
 
-```bash
-docker exec wordpress_db mysqldump -u wordpress -pwordpress wordpress > backup.sql
-```
+## 📖 Key Concepts
 
-### Importar banco de dados
+### Hexagonal Architecture
 
-Via PHPMyAdmin:
-1. Selecione o database `wordpress`
-2. Navegue até a aba "Import"
-3. Selecione o arquivo SQL
+The plugin follows hexagonal architecture principles:
 
-Via linha de comando:
+- **Domain Layer**: Pure business logic (no WordPress dependencies)
+- **Application Layer**: Use cases orchestrating domain logic
+- **Infrastructure Layer**: WordPress adapters (theme_mod, transients, CSS generation)
+- **Presentation Layer**: Hooks and Customizer integration
 
-```bash
-docker exec -i wordpress_db mysql -u wordpress -pwordpress wordpress < backup.sql
-```
+### Benefits
 
-## Volumes Persistentes
+- **Testability**: 91 unit tests with mocked WordPress functions
+- **Maintainability**: Clean separation of concerns
+- **Type Safety**: PHP 8.1+ with PHPStan Level 8
+- **Performance**: CSS caching via WordPress Transients
+- **Extensibility**: Ports & Adapters pattern allows easy replacements
 
-O Docker Compose cria dois volumes nomeados:
+## 🔄 Migration from v1.x
 
-- `db_data`: Dados do MySQL
-- `wordpress_data`: Instalação WordPress (exceto o tema em desenvolvimento)
+If you're upgrading from the old theme-based architecture to v2.0.0 plugin:
 
-O tema em `./src` é montado diretamente, não está em volume.
+1. Backup your database and theme files
+2. Activate the "Theme Core Features" plugin
+3. Verify customizer settings are preserved
+4. All existing `theme_mod` values are automatically migrated
 
-## Arquitetura
+See [MIGRATION.md](packages/plugin/MIGRATION.md) for complete instructions.
 
-```
-┌─────────────────┐
-│  WordPress App  │ :8080
-│  (Container)    │
-└────────┬────────┘
-         │
-         ├─── Volume Mount: ./src → /var/www/html/wp-content/themes/theme-globaltech
-         │
-         └─── Network: wordpress_network
-                    │
-         ┌──────────┴──────────┐
-         │                     │
-┌────────▼────────┐   ┌────────▼────────┐
-│   MySQL DB      │   │   PHPMyAdmin    │ :8081
-│  (Container)    │   │   (Container)   │
-└─────────────────┘   └─────────────────┘
-```
+## 🤝 Contributing
 
-## Notas Técnicas
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- O WordPress está configurado com `WORDPRESS_DEBUG=true` por padrão
-- Alterações no tema são refletidas imediatamente (hot reload)
-- O PHPMyAdmin facilita operações complexas de banco de dados
-- Os volumes garantem persistência de dados entre reinicializações
+## 📝 License
 
-## Documentação Adicional
+GPL v2 or later
 
-- [WordPress Docker Official Image](https://hub.docker.com/_/wordpress)
-- [MySQL Docker Official Image](https://hub.docker.com/_/mysql)
-- [WordPress Theme Development](https://developer.wordpress.org/themes/)
+## 👤 Author
+
+**Willian Sant'Anna**
+
+- GitHub: [@wssantanna](https://github.com/wssantanna)
+- Repository: [theme-globaltech](https://github.com/wssantanna/theme-globaltech)
+
+## 🐛 Issues
+
+Report issues at: https://github.com/wssantanna/theme-globaltech/issues
+
+---
+
+**Made with ❤️ using Hexagonal Architecture and WordPress best practices**
